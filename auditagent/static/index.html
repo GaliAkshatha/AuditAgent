@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuditAgent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="wordmark">AuditAgent</span>
+    <span class="tagline">Crawl it. Read the code. Find what breaks first.</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel form-panel">
+    <form id="audit-form">
+      <div class="field">
+        <label for="url">Deployed app URL</label>
+        <input type="url" id="url" name="url" placeholder="https://your-app.com" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="repo">GitHub repo <span class="optional">optional — enables endpoint-gap findings</span></label>
+        <input type="url" id="repo" name="repo" placeholder="https://github.com/user/repo" autocomplete="off">
+      </div>
+
+      <button type="button" id="advanced-toggle" class="link-btn">Advanced options</button>
+      <div class="advanced" id="advanced-fields" hidden>
+        <div class="field">
+          <label for="api_base_url">API base URL <span class="optional">if different from the app URL above</span></label>
+          <input type="url" id="api_base_url" name="api_base_url" placeholder="https://api.your-app.com" autocomplete="off">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="provider">Model provider</label>
+            <select id="provider" name="provider">
+              <option value="gemini" selected>Gemini (free tier)</option>
+              <option value="anthropic">Claude</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="max_pages">Max pages</label>
+            <input type="number" id="max_pages" name="max_pages" value="25" min="1" max="200">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" id="submit-btn" class="primary-btn">Run audit</button>
+    </form>
+  </section>
+
+  <section class="panel progress-panel" id="progress-panel" hidden>
+    <h2 id="progress-url" class="mono"></h2>
+  <ol class="steps" id="steps">
+    <li class="step" data-step="crawling"><span class="num"><span class="num-text">1</span></span><span class="label">Crawling live app</span></li>
+    <li class="step" data-step="analyzing_repo"><span class="num"><span class="num-text">2</span></span><span class="label">Analyzing repo source code</span></li>
+    <li class="step" data-step="building_graph"><span class="num"><span class="num-text">3</span></span><span class="label">Building dependency graph</span></li>
+    <li class="step" data-step="generating_recommendations"><span class="num"><span class="num-text">4</span></span><span class="label">Generating recommendations</span></li>
+    <li class="step" data-step="generating_report"><span class="num"><span class="num-text">5</span></span><span class="label">Generating final report</span></li>
+  </ol>
+    <div id="progress-result"></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head">
+      <h2>Recent runs</h2>
+      <button type="button" id="most-tested-toggle" class="link-btn">Show most-tested</button>
+    </div>
+    <div id="history"><p class="empty">No runs yet — run your first audit above.</p></div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

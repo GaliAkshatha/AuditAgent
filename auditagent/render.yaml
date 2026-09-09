@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: auditagent-backend
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && playwright install --with-deps chromium"
+    startCommand: "uvicorn api:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      # Using Neon instead of Render's own free Postgres — Render's free
+      # database gets fully DELETED after 30 days, not just paused, which
+      # is worse for a persistent project. Set this manually in Render's
+      # dashboard to your real Neon connection string (from neon.tech's
+      # project dashboard, includes sslmode=require) — Render can't
+      # auto-provision a database it doesn't host, so this is `sync: false`
+      # rather than `fromDatabase` like a Render-hosted DB would use.
+      - key: DATABASE_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SESSION_SECRET_KEY
+        generateValue: true
+      - key: CREDENTIALS_MASTER_KEY
+        sync: false  # Render's generateValue produces a generic random string, NOT a
+                     # valid Fernet key (Fernet requires exactly 32 url-safe base64 bytes) —
+                     # confirmed by testing this directly, a generic random string throws
+                     # "Fernet key must be 32 url-safe base64-encoded bytes" and crashes the
+                     # app on startup. Generate a real one yourself and set it manually:
+                     #   python3 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+      - key: FRONTEND_URL
+        sync: false
+
+# No `databases:` block — the database now lives on Neon, not Render.
+# See DATABASE_URL above.
