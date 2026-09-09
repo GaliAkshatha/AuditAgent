@@ -581,5 +581,5 @@ ANTHROPIC_API_KEY=your_anthropic_api_key
 ---
 
 <p align="center">
-  Built by <a href="https://github.com/GaliAkshatha">Akshatha Gali</a>
+  Built by <a href="https://github.com/GaliAkshatha">Akshatha</a>
 </p>
